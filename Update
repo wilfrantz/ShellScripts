@@ -1,0 +1,33 @@
+#!/bin/bash 
+
+# Update : 
+# Simple bash script to run mac system and terminal tools update.
+# Updated : May 2020
+
+# set -x # Debug mode.
+# set -n # Run w/o execution.
+
+{
+trap 'echo "Nope!!!"' SIGINT SIGTERM SIGTSTP # Trap signal
+
+printf "\nHello Dede.\n"
+
+# Mac Operating system update. 
+printf "\nStarting MacOS Update ...\n"
+printf "Please provide system "
+sudo softwareupdate -iaR
+
+# Mac App Store applications update.
+printf "\nStarting Mac Appstore Apps update ...\n"
+mas upgrade
+
+# Applications update via Brew. 
+printf "\nStarting Brew Cask Update ...\n"
+brew cask upgrade
+
+# Brew packages update.
+printf "\nStartting Brew packages update and upgrade ...\n"
+brew upgrade && brew update
+
+}
+exit 0
