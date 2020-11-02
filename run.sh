@@ -1,16 +1,12 @@
 #!/bin/bash
 
 # set -x # Run in debug mode.
-# set -n # Run w\o execution.
+ set -n # Run w\o execution.
 
-# determine the Linux system environment.
-system=$(uname -a | cut -d" " -f 2)
-
-# If system is Kali
-if [ "$system" = "kali" ]; then
+Install_tools(){
 	# Array list of the tools to install.
-  # TODO tun below to a funtion.
 	arr=(
+		#"figlet"
 		"preload"
 		"cargo"
 		"tor"
@@ -21,10 +17,8 @@ if [ "$system" = "kali" ]; then
 		"bleachbit"
 		"zsh"
 		"neofetch"
-		"bum"
 		"gnome-do"
 		"bum"
-		#  "figlet"
 		"shutter"
 		"scrub"
 		"apt-file"
@@ -33,17 +27,33 @@ if [ "$system" = "kali" ]; then
 		"tree"
 		"speedtest-cli"
 		"dnsutils"
-	)
-# curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/bashrc -o ~/.bashrc
+		)
 
-# curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/vimrc -o ~/.vimrc
+	# Install tools.
+	for tool in "${arr[@]}"
+	do
+		apt install "$tool"
+	done
+}
 
-# Install tools.
-for tools in "${arr[@]}"
-do
-	apt install "$tools"
-done
+# find the Linux system environment.
+system=$(uname -a | cut -d" " -f 2)
 
+# If system is Kali
+if [ "$system" = "kali" ]; 
+then
+	Install_tools;
+elif [ "$system" = Darwin ];
+	then
+	continue
+else
+	read -p "Do you want to install Network tools and utils? (y/n) " answer
+	if [ "$answer" = "y" ] || [ "$answer" = "Y" ];
+	then
+		Install_tools;
+	 else
+		continue
+	fi
 fi
 
 # Create run dir
@@ -59,4 +69,6 @@ curl "$url".screenrc -o ~/.screenrc
 curl "$url".bash_aliases -o ~/.bash_aliases
 curl "$url"clean -o ~/clean
 
-
+	# TODO
+	# curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/bashrc -o ~/.bashrc
+	# curl https://raw.githubusercontent.com/linuxacademy/content-python3-sysadmin/master/helpers/vimrc -o ~/.vimrc
