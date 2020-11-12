@@ -10,6 +10,9 @@ Install_tools(){
 		"preload"
 		"cargo"
 		"tor"
+		"macchanger"
+		"proxychains"
+		"nmap"
 		"proxychains"
 		"neofetch"
 		"gdb"
@@ -26,18 +29,19 @@ Install_tools(){
 		"lazy"
 		"tree"
 		"speedtest-cli"
+		"tmux"
 		"dnsutils"
 		)
 
 	# Install tools.
 	for tool in "${arr[@]}"
 	do
-		apt install "$tool"
+		apt -y install "$tool" &> /dev/null
 	done
 }
 
 # find the Linux system environment.
-system=$(uname -a | cut -d" " -f 2)
+system=$(uname -a | cut -d" " -f1)
 
 # If system is Kali
 if [ "$system" = "kali" ]; 
