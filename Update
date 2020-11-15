@@ -7,29 +7,52 @@
 # set -x # Debug mode.
 # set -n # Run w/o execution.
 
-{
-# Trap signal
-trap 'echo "Cannot stop now. Give it a minute!"' SIGINT SIGTERM SIGTSTP 
-
-printf "\nHello Dede.\n"
-
-# Mac App Store applications update.
-printf "\nStarting Mac Appstore Apps update ...\n"
-mas upgrade
-
-# Applications update via Brew.
-printf "\nStarting Brew Cask Update ...\n"
-# brew cask upgrade # deprecated
-brew upgrade --cask
-
-# Brew packages update.
-printf "\nStartting Brew packages update and upgrade ...\n"
-brew upgrade && brew update
-
+macOS_updater(){
 # Mac Operating system update.
 printf "\nStarting MacOS Update ...\n"
 printf "Please provide system "
 sudo softwareupdate -iaR --verbose
-
 }
-exit 0
+
+main(){
+    printf "\n[+] Hello Dede.\n"
+
+    if [ "$#" -gt 2 ] 
+      then
+      echo "[-] Too many arguments!!!"
+      exit 1
+    fi
+
+    if [ "$1" == "-m" ]
+        then
+            macOS_updater && utils_runner
+            exit 0
+        elif [ "$1" != "m" ] 
+            then 
+            echo "[-] Wrong option, run the sript again!!!"
+            exit -2
+    fi
+}
+
+utils_runner(){
+# Trap Signal 
+trap 'echo "[-] Caught Signal"' SIGINT SIGTERM SIGTSTP 
+
+# Mac App Store applications update.
+printf "\n[+] Starting Mac Appstore Apps update ...\n"
+mas upgrade
+
+# Applications update via Brew.
+printf "\n[+] Starting Brew Cask Update ...\n"
+# brew cask upgrade # deprecated
+brew upgrade --cask
+
+# Brew packages update.
+printf "\n[+] Startting Brew packages update and upgrade ...\n"
+brew upgrade
+brew update
+}
+
+
+### MAIN:
+main
