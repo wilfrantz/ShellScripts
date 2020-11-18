@@ -8,22 +8,25 @@
 # set -n # Run w/o execution.
 
 main(){
-    if [ "$#" -gt 1 ] 
+    if [ "$#" -gt 2 ] 
       then
       printf "\t\33[31m[✘]\33[0m Too many arguments!!!"
       exit 1
     fi
 
-    if [ "$1" == "os" ]
+    if [ "$1" == "os" ] || [ "$2" == "os" ]
         then
             macOS_updater && utils_runner
             exit 0
-        elif [ "$1" == "tools" ]
+        elif [ "$1" == "tools" ] || [ "$2" == "tools" ]
+            then 
+            macOS_updater && utils_runner
+            exit 0
+        elif [ "$#" == 0 ] 
             then 
             utils_runner
             exit 0
-        elif [ "$1" != "os" ] 
-            then 
+        else
             printf "\t\33[31m[✘]\33[0m Wrong option, usage: '${0} os' or just '${0}'"
             exit -2
     fi
