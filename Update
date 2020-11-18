@@ -14,11 +14,11 @@ main(){
       exit 1
     fi
 
-    if [ "$1" == "os" ] || [ "$2" == "os" ]
+    if [ "$1" == "os" ] || [ "$2" == "tools" ]
         then
             macOS_updater && utils_runner
             exit 0
-        elif [ "$1" == "tools" ] || [ "$2" == "tools" ]
+        elif [ "$1" == "tools" ] || [ "$2" == "os" ]
             then 
             macOS_updater && utils_runner
             exit 0
