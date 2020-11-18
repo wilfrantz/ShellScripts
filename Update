@@ -18,6 +18,10 @@ main(){
         then
             macOS_updater && utils_runner
             exit 0
+        elif [ "$1" == "tools" ]
+            then 
+            utils_runner
+            exit 0
         elif [ "$1" != "os" ] 
             then 
             printf "\t\33[31m[✘]\33[0m Wrong option, usage: '${0} os' or just '${0}'"
