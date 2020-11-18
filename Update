@@ -1,58 +1,58 @@
 #!/bin/bash
 
 # Update :
-# Simple bash script to run mac system and terminal tools update.
+# Simple bash script to update macOS and utils.
 # Updated : November 2020
 
 # set -x # Debug mode.
 # set -n # Run w/o execution.
 
-macOS_updater(){
-# Mac Operating system update.
-printf "\nStarting MacOS Update ...\n"
-printf "Please provide system "
-sudo softwareupdate -iaR --verbose
-}
-
 main(){
-    printf "\n[+] Hello Dede.\n"
-
-    if [ "$#" -gt 2 ] 
+    if [ "$#" -gt 1 ] 
       then
-      echo "[-] Too many arguments!!!"
+      printf "\t\33[31m[✘]\33[0m Too many arguments!!!"
       exit 1
     fi
 
-    if [ "$1" == "-m" ]
+    if [ "$1" == "os" ]
         then
             macOS_updater && utils_runner
             exit 0
-        elif [ "$1" != "m" ] 
+        elif [ "$1" != "os" ] 
             then 
-            echo "[-] Wrong option, run the sript again!!!"
+            printf "\t\33[31m[✘]\33[0m Wrong option, usage: '${0} os' or just '${0}'"
             exit -2
     fi
 }
 
+
+macOS_updater(){
+    # Mac Operating system update.
+    printf "\n\33[32m[✔]\33[0m Starting MacOS Update ...\n"
+    printf "[+] Please provide system "
+    sudo softwareupdate -iaR --verbose
+}
+
+
 utils_runner(){
-# Trap Signal 
-trap 'echo "[-] Caught Signal"' SIGINT SIGTERM SIGTSTP 
+    # Trap Signal TODO : Improvement needed here
+    trap 'echo "[-] Caught Signal"' SIGINT SIGTERM SIGTSTP 
 
-# Mac App Store applications update.
-printf "\n[+] Starting Mac Appstore Apps update ...\n"
-mas upgrade
+    # Mac App Store applications update.
+    printf "\n[+] Starting Mac Appstore Apps update ...\n"
+    mas upgrade
 
-# Applications update via Brew.
-printf "\n[+] Starting Brew Cask Update ...\n"
-# brew cask upgrade # deprecated
-brew upgrade --cask
+    # Applications update via Brew.
+    printf "\n[+] Starting Brew Cask Update ...\n"
+    # brew cask upgrade # NOTEdeprecated
+    brew upgrade --cask
 
-# Brew packages update.
-printf "\n[+] Startting Brew packages update and upgrade ...\n"
-brew upgrade
-brew update
+    # Brew packages update.
+    printf "\n[+] Startting Brew packages update and upgrade ...\n"
+    brew upgrade
+    brew update
 }
 
 
 ### MAIN:
-main
+main "$@"
