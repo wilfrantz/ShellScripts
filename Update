@@ -2,6 +2,7 @@
 
 # Update :
 # Simple bash script to update macOS and utils.
+# Usage :  run "update os tools" or "update tools os" or "update"
 # Updated : November 2020
 
 # set -x # Debug mode.
@@ -14,22 +15,40 @@ main(){
       exit 1
     fi
 
-    if [ "$1" == "os" ] || [ "$2" == "tools" ]
-        then
-            macOS_updater && utils_runner
-            exit 0
-        elif [ "$1" == "tools" ] || [ "$2" == "os" ]
-            then 
-            macOS_updater && utils_runner
-            exit 0
-        elif [ "$#" == 0 ] 
-            then 
+    while [ "$#" == 0 ] 
+       do 
             utils_runner
             exit 0
-        else
-            printf "\t\33[31m[✘]\33[0m Wrong option, usage: '${0} os' or just '${0}'"
-            exit -2
-    fi
+    done
+
+    while [ "$#" == 1 ]
+        do
+            if [ "$1" == "os" ] 
+                then
+                    macOS_updater 
+                    exit 0
+            elif [ "$1" == "tools" ]
+                then
+                    utils_runner
+                    exit 0
+            else
+                printf "\t\33[31m[✘]\33[0m Wrong option, usage: '${0} os' or just '${0}'"
+                exit -2
+            fi
+    done
+
+    while [ "$#" == 2 ]
+        do
+            if [ "$1" == "os" ] && [ "$2" == "tools" ] \
+                || [ "$1" == "tools" ] || [ "$2" == "os" ]
+                then
+                    macOS_updater && utils_runner
+                    exit 0
+            else
+                printf "\t\33[31m[✘]\33[0m Wrong option, usage: '${0} os' or just '${0}'"
+                exit -3
+            fi
+    done
 }
 
 
