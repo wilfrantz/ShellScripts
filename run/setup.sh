@@ -20,8 +20,8 @@ command_exists() {
 
 # install ZSH shell on your OS 
 setup_zsh(){
-   if [ "$CURRENT_SHELL" != "zsh" ]
-     then 
+   while [ "$CURRENT_SHELL" != "zsh" ]
+    do 
         if [ "$SYSTEM" == "Darwin" ]
         then
             brew install zsh
@@ -30,7 +30,7 @@ setup_zsh(){
             apt --assume-yes install zsh
         fi
     chsh -s $(which zsh)
-    fi
+    done
 }
 set +x # HACK: Remove me
 
