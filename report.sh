@@ -3,7 +3,7 @@
 # Simple report script for SysAdmin.
 # Update: November 2020
 
-# set -x # Debug mode.
+ set -x # Debug mode.
 # set -n # Run w/o execution.
 
 # NOTE  alias upsys='apt-get update && apt-get upgrade -y' in ~/.zshrc
@@ -24,10 +24,9 @@ write_to_file(){
 	printf "\nRootkit check... \n" 
 	sudo chkrootkit | grep -i "infected" 
 
-} >> "$OutPutFile"
+} 
 
-
-write_to_file()
+write_to_file >> "$OutPutFile"
 
 telegram-send --file "$OutPutFile" --caption "Report $(date)"
 
