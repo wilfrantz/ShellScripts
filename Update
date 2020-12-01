@@ -39,7 +39,7 @@ main(){
     done
 
     # NOTE : below logic not efficient wit OS update but keep for coming features.
-    while [ "$#" -eq 2 ]
+    while [ "$#" -eq '2' ]
         do
             if [ "$1" == "os" ] && [ "$2" == "tools" ] \
                 || [ "$1" == "tools" ] || [ "$2" == "os" ]
@@ -60,7 +60,7 @@ macOS_updater(){
     printf "\n\33[32m[✔]\33[0m Starting MacOS Update ...\n"
     printf "[+] Please provide system "
     # sudo softwareupdate -iaR --verbose
-    sudo softwareupdate --all --install --force --verbose
+    sudo softwareupdate --all --install --force --verbose --restart
 }
 
 
