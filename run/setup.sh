@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE run with sudo 
 #set -x
 #set -n
-
 
 #set -x # HACK: Remove me
 ############################ Global Variables 
@@ -11,13 +11,15 @@ SYSTEM=$(uname -a | cut -d" " -f1)
 source_url="https://dede.dev/run/"
 
 command_exists() {
-    local ret=0
+    local ret='0'
     command -v $1 > /dev/null 2>&1 { local ret='1';}
 
     # fail on non-zero return value
     if [ "$ret" -ne 0 ]; then 
             return 1
     fi
+
+    return 0
 }
 
     # install ZSH shell on your OS 
@@ -29,7 +31,7 @@ command_exists() {
                 brew install zsh
             elif [ "$SYSTEM" == "Linux" ]
                then
-                 sudo apt --assume-yes install zsh
+                 apt --assume-yes install zsh
             fi
         chsh -s $(which zsh)
         fi
@@ -58,7 +60,7 @@ command_exists() {
         wget "$source_url""Fira\ Mono\ Regular\ Nerd\ Font\ Complete.otf"
         wget "$source_url""Fura\ Mono\ Regular\ Nerd\ Font\ Complete.otf"
 
-        # autosuggestion 
+        # Autosuggestion 
         git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
         # syntax highlighting
@@ -71,11 +73,12 @@ setup() {
 }
 
 #main
-    if [ !command_exists "git" ]; then
-        sudo apt --assume-yes install git
+    if [ !command_exists git ]; then
+        apt update && apt --assume-yes install git
     fi
 
      setup && {
-        # Setup vim
+        # Setup vim  https://github.com/spf13/spf13-vim.git
+        # Copyright 2014 Steve Francia
         bash vim3.sh
     }
