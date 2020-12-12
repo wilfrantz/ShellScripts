@@ -15,11 +15,10 @@ command_exists() {
     command -v $1 > /dev/null 2>&1 { local ret='1';}
 
     # fail on non-zero return value
-    if [ "$ret" -ne 0 ]; then 
+    if [ "$ret" -ne '0' ]; then 
             return 1
     fi
-
-    return 0
+   return 0
 }
 
     # install ZSH shell on your OS 
@@ -43,7 +42,7 @@ command_exists() {
 
         for rcFile in "${rc_files[@]}"
             do
-                curl "$source_url""$rcFile" -o ~/."$rcFile"
+                curl "$source_url""$rcFile" -o ~/."$rcFile" &> /dev/null
             done
         source ~/.zshrc
     }
@@ -56,7 +55,7 @@ command_exists() {
         # Install PowerLeve10K theme
         git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
 
-        # get Fira Mono Regular Nerd font 
+        # get Nerd fonts
         wget "$source_url""Fira\ Mono\ Regular\ Nerd\ Font\ Complete.otf"
         wget "$source_url""Fura\ Mono\ Regular\ Nerd\ Font\ Complete.otf"
 
