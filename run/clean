@@ -1,0 +1,14 @@
+#!/bin/bash
+ 
+# Clean up operation.
+rm -rf ~/run
+rm ~/run.sh
+rm ~/.screenrc
+rm ~/.bash_aliases
+rm ~/clean
+
+# Remove vi keybind from .bashrc.
+sed -i 's/set -o vi/d' ~/.bashrc
+
+# To return to iitial state.
+source ~/.bashrc
