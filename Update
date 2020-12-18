@@ -10,48 +10,50 @@
 
 main(){
     if [ "$#" -gt '1' ] 
-      then
-      printf "\t\33[31m[✘]\33[0m Too many arguments!!!\n"
-      exit 1
+    then
+        printf "\t\33[31m[✘]\33[0m Too many arguments!!!\n"
+        exit 1
     fi
 
     while [ "$#" -eq '0' ] 
-       do 
-            utils_runner
-            exit 0
+    do 
+        utils_runner
+        exit 0
     done
 
     while [ "$#" -eq '1' ]
-        do
-            if [ "$1" == "os" ] 
-                then
-                    macOS_updater 
-                    exit 0
-            elif [ "$1" == "tools" ]
-                then
-                    utils_runner
-                    exit 0
-            else
-                local cmd=$(which $0 | awk -F '/' '{print $NF}')
-                printf "\t\33[31m[✘]\33[0m Wrong option, usage: '$cmd os' or just '$cmd'\n"
-                exit -2
-            fi
+    do
+        if [ "$1" == "os" ] 
+        then
+            macOS_updater 
+            exit 0
+        elif [ "$1" == "tools" ]
+        then
+            utils_runner
+            exit 0
+        else
+            local cmd
+            "$cmd"="$(which "$0" | awk -F '/' '{print $NF}')"
+            printf "\t\33[31m[✘]\33[0m Wrong option, usage: '%s' or just '%s'\n", "$cmd" "$cmd"
+            exit 2
+        fi
     done
 
     # NOTE : below logic not efficient wit OS update.
-           # Kept here for posible upcoming features.
+    # Kept here for posible upcoming features.
     while [ "$#" -eq '2' ]
-        do
-            if [ "$1" == "os" ] && [ "$2" == "tools" ] \
-                || [ "$1" == "tools" ] || [ "$2" == "os" ]
+    do
+        if [ "$1" == "os" ] && [ "$2" == "tools" ] \
+            || [ "$1" == "tools" ] || [ "$2" == "os" ]
                 then
                     macOS_updater && utils_runner
                     exit 0
-            else
-                local cmd=$(which $0 | awk -F '/' '{print $NF}')
-                printf "\t\33[31m[✘]\33[0m Wrong option, usage: '$cmd os' or just '$cmd'\n"
-                exit -3
-            fi
+                else
+                    local cmd
+                    "$cmd"="$(which "$0" | awk -F '/' '{print $NF}')"
+                    printf "\t\33[31m[✘]\33[0m Wrong option, usage: '%s' or just '%s'\n", "$cmd" "$cmd"
+                    exit 3
+        fi
     done
 }
 
@@ -68,8 +70,8 @@ macOS_updater(){
 
 utils_runner(){
     {   
-       { # Trap Signal TODO : Improvement needed here
-        trap 'printf "\t\33[31m[✘]\33[0m Caught Signal"' SIGINT SIGTERM SIGTSTP 
+        { # Trap Signal TODO : Improvement needed here
+            trap 'printf "\t\33[31m[✘]\33[0m Caught Signal"' SIGINT SIGTERM SIGTSTP 
 
         # brew doctor # TODO
         # Mac App Store applications update.
@@ -84,11 +86,11 @@ utils_runner(){
         # Brew packages update.
         printf "\n[+] Startting Brew packages update and upgrade ...\n"
         brew upgrade && brew update
-       } && {
-            printf "\n\33[32m[✔]\33[0m Utils update completed successfully !!!\n"
+    } && {
+        printf "\n\33[32m[✔]\33[0m Utils update completed successfully !!!\n"
             return 0
         }
-    }
+}
 }
 
 
