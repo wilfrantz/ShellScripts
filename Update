@@ -25,11 +25,11 @@ main(){
     do
         if [ "$1" == "os" ] 
             then
-                if [ SYSTEM=$(uname -a | cut -d" " -f1) == "Darwin" ]
+                if [ $(uname -a | cut -d" " -f1) == "Darwin" ]
                     then
                         macOS_updater 
                         exit 0
-                elif [ SYSTEM=$(uname -a | cut -d" " -f1) == "Linux "]
+                elif [ $(uname -a | cut -d" " -f1) == "Linux "]
                     then
                         sudo apt-get update && sudo apt-get upgrade -y 
                     fi
@@ -80,7 +80,7 @@ utils_runner(){
             trap 'printf "\t\33[31m[✘]\33[0m Caught Signal"' SIGINT SIGTERM SIGTSTP 
 
         # brew doctor # TODO
-        if [ SYSTEM=$(uname -a | cut -d" " -f1) == "Darwin" ];
+        if [ $(uname -a | cut -d" " -f1) == "Darwin" ];
         then 
             # Mac App Store applications update.
             printf "\n[+] Starting Mac Appstore Apps update ...\n"
