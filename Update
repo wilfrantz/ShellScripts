@@ -24,9 +24,15 @@ main(){
     while [ "$#" -eq '1' ]
     do
         if [ "$1" == "os" ] 
-        then
-            macOS_updater 
-            exit 0
+            then
+                if [ SYSTEM=$(uname -a | cut -d" " -f1) == "Darwin" ]
+                    then
+                        macOS_updater 
+                        exit 0
+                elif [ SYSTEM=$(uname -a | cut -d" " -f1) == "Linux "]
+                    then
+                        sudo apt-get update && sudo apt-get upgrade -y 
+                    fi
         elif [ "$1" == "tools" ]
         then
             utils_runner
@@ -40,7 +46,7 @@ main(){
     done
 
     # NOTE : below logic not efficient wit OS update.
-    # Kept here for posible upcoming features.
+    # Kept here for upcoming features.
     while [ "$#" -eq '2' ]
     do
         if [ "$1" == "os" ] && [ "$2" == "tools" ] \
@@ -74,9 +80,12 @@ utils_runner(){
             trap 'printf "\t\33[31m[✘]\33[0m Caught Signal"' SIGINT SIGTERM SIGTSTP 
 
         # brew doctor # TODO
-        # Mac App Store applications update.
-        printf "\n[+] Starting Mac Appstore Apps update ...\n"
-        mas upgrade
+        if [ SYSTEM=$(uname -a | cut -d" " -f1) == "Darwin" ];
+        then 
+            # Mac App Store applications update.
+            printf "\n[+] Starting Mac Appstore Apps update ...\n"
+            mas upgrade
+        fi 
 
         # Applications update via Brew.
         printf "\n[+] Starting Brew Cask Update ...\n"
@@ -92,7 +101,6 @@ utils_runner(){
         }
 }
 }
-
 
 ### MAIN:
 main "$@"
