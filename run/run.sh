@@ -64,7 +64,7 @@ SYSTEM=$(uname -a | cut -d" " -f1)
 if [ "$SYSTEM" = "kali" ]; then
 	kali && getUtils 
 else 
-	getUtils(:
+	getUtils
 fi
 # TODO:curl http://j.mp/spf13-vim3 -L -o - | sh
 
