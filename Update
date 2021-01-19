@@ -70,9 +70,9 @@ macOS_updater(){
     # Mac Operating system update.
     printf "\n\33[32m[+]\33[0m Starting MacOS Update ...\n"
     printf "[+] Please provide system "
-    printf "\n\n"
     # sudo softwareupdate -iaR --verbose
     sudo softwareupdate --all --install --force --verbose --restart
+    printf "\n\n"
 }
 
 
