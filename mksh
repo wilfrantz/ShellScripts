@@ -1,0 +1,45 @@
+#!/bin/bash
+# mksh: Script to create file script template !
+# Updated March  2021
+
+
+if [  "$#" -gt 2 ] || [ "$#" -eq 0 ]
+then
+	printf "\nMissing arguments.\n\n Usage: %s file\n" "$0"
+	exit 1
+fi
+
+# scriptname="$1"
+file="$1" #"${scriptname}"
+scriptdir="${HOME}/Code/ShellScripts/${file}"
+doc=$(printf '#!/bin/bash\n\n# set -x # Debug mode.\n# set -n # Run w/o execution.' > "$file")
+
+# Checking if the file exist.
+if [[ -e $file ]]; then
+	printf "\n The file %s is already created.\n" "$file"
+	exit 1
+	# checking if the file is not a system command!
+elif  type "$file" 2> /dev/null ; then
+	printf "\n %s is already a system command. \n" "$file"
+	exit 2 
+fi
+
+if [ "$1" = "." ] 
+then 
+	file="$2"
+	"$doc"
+
+	"$EDITOR" "$file"
+elif [ "$2" = "." ]
+then 
+	file="$1"
+	"$doc"
+	"$EDITOR" "$file"
+else
+	"$doc"
+	mv "$file" ~/Code/ShellScripts;
+	chmod u+x "$file";
+	# Open file script in favorite editor! 
+	"$EDITOR"  "$scriptdir"
+fi
+
