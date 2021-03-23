@@ -30,7 +30,7 @@ for repo in "$repos"*; do
 
 	repo_name=$(exa -d "$repo" | cut -d'/' -f6)
 
-	if [ "$(git -C "$repo" status | grep -i "nothing to commit")" ];
+	if [ "$(git -C "$repo" status 2> /dev/null | grep -i "nothing to commit")" ];
 	then
 		printf "${COLOR_GREEN}Fetching${COLOR_NONE} %s ...\n" "$repo"
 		git -C "$repo" fetch 2> /dev/null
