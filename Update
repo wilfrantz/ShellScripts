@@ -40,9 +40,8 @@ main(){
             utils_runner
             exit 0
         else
-            local cmd
-            "$cmd"="$(which "$0" | awk -F '/' '{print $NF}')"
-            printf "\t\33[31m[✘]\33[0m Wrong option, usage: '%s' or just '%s'\n", "$cmd" "$cmd"
+            cmd=$(which "$0" | awk -F '/' '{print $NF}')
+            printf "\t\33[31m[✘]\33[0m Wrong option! Usage: '%s os/tools' or just '%s'\n\n" "$cmd" "$cmd"
             exit 2
         fi
     done
@@ -58,7 +57,7 @@ main(){
                     exit 0
                 else
                     local cmd
-                    "$cmd"="$(which "$0" | awk -F '/' '{print $NF}')"
+                    #"$cmd"="$(which "$0" | awk -F '/' '{print $NF}')"
                     printf "\t\33[31m[✘]\33[0m Wrong option, usage: '%s' or just '%s'\n", "$cmd" "$cmd"
                     exit 3
         fi
@@ -82,13 +81,13 @@ utils_runner(){
             trap 'printf "\t\33[31m[✘]\33[0m Caught Signal"' SIGINT SIGTERM SIGTSTP 
 
         # brew doctor # TODO
-        if [ "$SYSTEM" == "Darwin" ];
-        then 
+        #if [ "$SYSTEM" == "Darwin" ];
+        #then 
             # Mac App Store applications update.
-            printf "\n[+] Starting Mac Appstore Apps update ...\n"
+            #printf "\n[+] Starting Mac Appstore Apps update ...\n"
             #mas upgrade
-            /usr/local/bin/mas upgrade
-        fi 
+            #/usr/local/bin/mas upgrade
+        #fi 
 
         # Applications update via Brew.
         printf "\n[+] Starting Brew Cask Update ...\n"
