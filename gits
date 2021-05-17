@@ -54,6 +54,6 @@ done
 
 repo_count=$(ls -l "$repos" | wc -l)
 printf "\nSummary: ${COLOR_BLUE}Repos${COLOR_NONE} %d | ${COLOR_BLUE}Updates${COLOR_NONE} %d | \
-${COLOR_BLUE}failures${COLOR_NONE} %d | ${COLOR_BLUE}warnings${COLOR_NONE} %d\n" "$repo_count" "$success" "$fail" "$warning"
+${COLOR_BLUE}failures${COLOR_NONE} %d | ${COLOR_BLUE}warnings${COLOR_NONE} %d|\n" "$repo_count" "$success" "$fail" "$warning"
 	exit
 
