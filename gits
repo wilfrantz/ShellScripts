@@ -32,9 +32,9 @@ for repo in "$repos"*; do
 
 	if [ "$(git -C "$repo" status 2> /dev/null | grep -i "nothing to commit")" ];
 	then
-		printf "${COLOR_GREEN}Fetching${COLOR_NONE} %s ...\n" "$repo"
+		printf "${COLOR_GREEN}Fetching${COLOR_NONE} %s \n" "$repo"
 		if git -C "$repo" fetch 2> /dev/null; then
-		#if [ $? -eq 0 ]; then
+			#if [ $? -eq 0 ]; then
 			printf "${COLOR_GREEN}Pulling${COLOR_NONE} %s" "$repo_name"
 			#exa --long --tree --level=1 "$repo"
 			git &> /dev/null -C "$repo" pull --rebase;  echo -e "${COLOR_GREEN} [Ok]"
@@ -54,6 +54,6 @@ done
 
 repo_count=$(ls -l "$repos" | wc -l)
 printf "\nSummary: ${COLOR_BLUE}Repos${COLOR_NONE} %d | ${COLOR_BLUE}Updates${COLOR_NONE} %d | \
-${COLOR_BLUE}failures${COLOR_NONE} %d | ${COLOR_BLUE}warnings${COLOR_NONE} %d \n" "$repo_count" "$success" "$fail" "$warning"
+	${COLOR_BLUE}failures${COLOR_NONE} %d | ${COLOR_BLUE}warnings${COLOR_NONE} %d \n" "$repo_count" "$success" "$fail" "$warning"
 	exit
 
