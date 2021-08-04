@@ -2,7 +2,8 @@
 
 if [ "$1" == "" ];
 then
-	echo "Bad usage"
+	echo "Bad usage: Provide network address!"
+	exit
 else
 	for i in $(seq 1 254); do
 		ping "$1"."$i" -c 1 | grep -i "64 bytes" | cut -d" " -f4 | sed 's/.$//'
