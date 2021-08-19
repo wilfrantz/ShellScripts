@@ -3,17 +3,20 @@
 # Get the Network address
 network_addr=''
 
-system=$(uname | cut -d' ' -f1 )
+system=$(uname)
 # If Linux system.
-if [ "$system" == "linux" ];
+if [ "$system" == "Linux" ];
 then
 	network_addr=$(hostname -I | cut -d' ' -f1 | awk -F'.' '{print $1"."$2"."$3}')
+	#network_addr=$(hostname -I | cut -d' ' -f1 | awk -F'.' '{print $1"."$2"."$3}')
 	# If MacOS
 elif [ "$system" == "Darwin" ];
 then
 	network_addr=$(ipconfig getifaddr en0 | awk -F'.' '{print $1"."$2"."$3}')
 fi
 # Scan for live hosts.
+while [ "$network_addr" != "" ]; do
 for i in $(seq 1 254); do
 	ping "$network_addr"."$i" -c 1 | grep -i "64 bytes" | cut -d" " -f4 | sed 's/.$//'
 done | nl
+done
