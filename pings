@@ -8,7 +8,7 @@ system=$(uname | cut -d' ' -f1 )
 if [ "$system" == "linux" ];
 then
 	network_addr=$(hostname -I | cut -d' ' -f1 | awk -F'.' '{print $1"."$2"."$3}')
-# If MacOS
+	# If MacOS
 elif [ "$system" == "Darwin" ];
 then
 	network_addr=$(ipconfig getifaddr en0 | awk -F'.' '{print $1"."$2"."$3}')
