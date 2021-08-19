@@ -15,8 +15,12 @@ then
 	network_addr=$(ipconfig getifaddr en0 | awk -F'.' '{print $1"."$2"."$3}')
 fi
 # Scan for live hosts.
-while [ "$network_addr" != "" ]; do
-for i in $(seq 1 254); do
-	ping "$network_addr"."$i" -c 1 | grep -i "64 bytes" | cut -d" " -f4 | sed 's/.$//'
-done | nl
-done
+if [ "$network_addr" != "" ];
+then
+	for i in $(seq 1 254); do
+		ping "$network_addr"."$i" -c 1 | grep -i "64 bytes" | cut -d" " -f4 | sed 's/.$//'
+	done | nl
+else
+	echo "Error: Issue detected with the network address."
+	exit 1
+fi
