@@ -13,7 +13,7 @@ COLOR_YELLOW="\033[1;33m"
 COLOR_NONE="\033[0m"
 COLOR_GRAY="\033[1;38;5;243m"
 
-repos="/Users/dede/Code/Github/"
+repos="$HOME/Code/Github/"
 #repos=$(find "$HOME" -type d -iname 'Github' | sed 's/\/.git//g')
 
 
