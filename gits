@@ -14,6 +14,8 @@ COLOR_NONE="\033[0m"
 COLOR_GRAY="\033[1;38;5;243m"
 
 repos="/Users/dede/Code/Github/"
+#repos=$(find "$HOME" -type d -iname 'Github' | sed 's/\/.git//g')
+
 
 title() {
 	echo -e "\n${COLOR_PURPLE}$1${COLOR_NONE}"
@@ -28,11 +30,11 @@ fail=0
 echo ""
 for repo in "$repos"*; do
 
-	repo_name=$(exa -d "$repo" | cut -d'/' -f6)
+	repo_name=$(exa -d "$repo" | awk -F'/' '{print $NF}')
 
 	if [ "$(git -C "$repo" status 2> /dev/null | grep -i "nothing to commit")" ];
 	then
-		printf "${COLOR_GREEN}Fetching${COLOR_NONE} %s \n" "$repo"
+		printf "${COLOR_GREEN}Fetching${COLOR_NONE} %s \n" "$repo_name"
 		if git -C "$repo" fetch 2> /dev/null; then
 			#if [ $? -eq 0 ]; then
 			printf "${COLOR_GREEN}Pulling${COLOR_NONE} %s" "$repo_name"
@@ -53,7 +55,6 @@ done
 
 
 repo_count=$(ls -l "$repos" | wc -l)
-printf "\nSummary: ${COLOR_BLUE}Repos${COLOR_NONE} %d | ${COLOR_BLUE}Updates${COLOR_NONE} %d | \
-	${COLOR_BLUE}failures${COLOR_NONE} %d | ${COLOR_BLUE}warnings${COLOR_NONE} %d \n" "$repo_count" "$success" "$fail" "$warning"
+printf "\nSummary: ${COLOR_BLUE}Repos${COLOR_NONE} %d | ${COLOR_BLUE}Updates${COLOR_NONE} %d | ${COLOR_BLUE}Failures${COLOR_NONE} %d | ${COLOR_BLUE}warnings${COLOR_NONE} %d \n" "$repo_count" "$success" "$fail" "$warning"
 	exit
 

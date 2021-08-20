@@ -67,7 +67,7 @@ main(){
 
 macOS_updater(){
     # Mac Operating system update.
-    #printf "\n\33[32m[+]\33[0m Starting MacOS Update ...\n"
+    printf "\n\33[32m[+]\33[0m Starting MacOS Update ...\n"
     #printf "[+] Please provide system "
     # sudo softwareupdate -iaR --verbose
     sudo softwareupdate --all --install --force --verbose --restart
