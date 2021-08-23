@@ -4,16 +4,15 @@
 network_addr=''
 
 system=$(uname)
-# If Linux system.
 if [ "$system" == "Linux" ];
 then
-	network_addr=$(hostname -I | cut -d' ' -f1 | awk -F'.' '{print $1"."$2"."$3}')
+	network_addr=$(ip route get 1.2.3.4 | awk '{print $7}' | awk -F'.' '{print $1"."$2"."$3}')
 	#network_addr=$(hostname -I | cut -d' ' -f1 | awk -F'.' '{print $1"."$2"."$3}')
-	# If MacOS
 elif [ "$system" == "Darwin" ];
 then
 	network_addr=$(ipconfig getifaddr en0 | awk -F'.' '{print $1"."$2"."$3}')
 fi
+
 # Scan for live hosts.
 if [ "$network_addr" != "" ];
 then
