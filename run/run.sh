@@ -28,7 +28,7 @@ kali(){
 		"curl"
 		"dnsutils"
 		'
-	} | xargs apt --assume-yes install 2> error.log 1> /dev/null
+	} | xargs -I "{}" apt --assume-yes install {}  2> error.log 1> /dev/null
 
 }
 
@@ -60,7 +60,8 @@ getUtils(){
 }
 
 #main 
-SYSTEM=$(uname -a | cut -d" " -f1)
+SYSTEM=$(uname)
+
 if [ "$SYSTEM" = "kali" ]; then
 	kali && getUtils 
 else 
