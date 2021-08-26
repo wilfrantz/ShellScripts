@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # set -x # Run in debug mode.
- set -n # Run w\o execution.
+# set -n # Run w\o execution.
 
 Install_tools(){
 	# Array list of the tools to install.
@@ -41,7 +41,7 @@ Install_tools(){
 }
 
 # find the Linux system environment.
-system=$(uname -a | cut -d" " -f1)
+system=$(uname)
 
 # If system is Kali
 if [ "$system" = "kali" ]; 
@@ -51,7 +51,7 @@ elif [ "$system" = Darwin ];
 	then
 	continue
 else
-	read -p "Do you want to install Network tools and utils? (y/n) " answer
+	read -p "Do you want to install Network tools and utils? [y/n] " answer
 	if [ "$answer" = "y" ] || [ "$answer" = "Y" ];
 	then
 		Install_tools;
@@ -60,10 +60,8 @@ else
 	fi
 fi
 
-# Create run dir
 mkdir ~/run
 
-# url path
 url="https://dede.dev/run/"
 
 # Copy run and clean scripts, screenrc bash_aliases files.
