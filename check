@@ -1,0 +1,7 @@
+#!/bin/bash
+
+domain=$1
+
+whois "$domain"| grep -i "Date:"
+echo ""
+whois "$domain"| grep -i "Registrar:"
