@@ -93,12 +93,14 @@ utils_runner(){
         printf "\n[+] Starting Brew Cask Update ...\n"
         # brew cask upgrade # NOTE deprecated
         #brew upgrade --cask
-        /usr/local/bin/brew upgrade --cask
+        /home/linuxbrew/.linuxbrew/bin/brew upgrade --cask
 
         # Brew packages update.
         printf "\n[+] Startting Brew packages update and upgrade ...\n"
         #brew upgrade && brew update
-        /usr/local/bin/brew update && /usr/local/bin/brew upgrade
+        #/usr/local/bin/brew update && /usr/local/bin/brew upgrade
+        /home/linuxbrew/.linuxbrew/bin/brew update && /home/linuxbrew/.linuxbrew/bin/brew upgrade
+
     } && {
         printf "\n\33[32m[✔]\33[0m Utils update completed successfully !!!\n"
             return 0
