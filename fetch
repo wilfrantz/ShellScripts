@@ -1,3 +1,5 @@
 #!/bin/bash
 
-awk -F"," '{print $1}' "$1" | grep -E "^$2"
+export GREP_COLORS='ms=01;31'
+
+awk -F"," '{print $1}' "$1" | grep -E --color='auto' "$2"
