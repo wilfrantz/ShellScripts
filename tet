@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+while
+  echo "Creates file";  touch dede
+  [[ ! -e dede ]]
+do echo "Please enter a valid number" >> dede ; done

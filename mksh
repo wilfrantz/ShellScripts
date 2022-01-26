@@ -15,7 +15,7 @@ scriptdir="${HOME}/Code/ShellScripts/${file}"
 doc=$(printf '#!/bin/bash\n\n# set -x # Debug mode.\n# set -n # Run w/o execution.' > "$file")
 
 # Checking if the file exist.
-if [[ -e $file ]]; then
+if [[ -f $file ]]; then
 	printf "\n The file %s is already created.\n" "$file"
 	exit 1
 	# checking if the file is not a system command!

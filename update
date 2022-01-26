@@ -8,63 +8,6 @@
 # set -x # Debug mode.
 # set -n # Run w/o execution.
 
-SYSTEM=$(uname -a | cut -d" " -f1) 
-
-main(){
-    if [ "$#" -gt '1' ] 
-    then
-        printf "\t\33[31m[✘]\33[0m Too many arguments!!!\n"
-        exit 1
-    fi
-
-    while [ "$#" -eq '0' ] 
-    do 
-        utils_runner
-        exit 0
-    done
-
-    while [ "$#" -eq '1' ]
-    do
-        if [ "$1" == "os" ] 
-        then
-            if [ "$SYSTEM" == "Darwin" ]
-            then
-                macOS_updater 
-                exit 0
-            elif [ "$SYSTEM" == "Linux" ]
-            then
-                sudo apt --force-yes update && sudo apt --force-yes upgrade -y 
-            fi
-        elif [ "$1" == "tools" ]
-        then
-            utils_runner
-            exit 0
-        else
-            cmd=$(which "$0" | awk -F '/' '{print $NF}')
-            printf "\t\33[31m[✘]\33[0m Wrong option! Usage: '%s os/tools' or just '%s'\n\n" "$cmd" "$cmd"
-            exit 2
-        fi
-    done
-
-    # NOTE : below logic not efficient wit OS update.
-    # Kept here for upcoming features.
-    while [ "$#" -eq '2' ]
-    do
-        if [ "$1" == "os" ] && [ "$2" == "tools" ] \
-            || [ "$1" == "tools" ] || [ "$2" == "os" ]
-                then
-                    macOS_updater && utils_runner
-                    exit 0
-                else
-                    local cmd
-                    #"$cmd"="$(which "$0" | awk -F '/' '{print $NF}')"
-                    printf "\t\33[31m[✘]\33[0m Wrong option, usage: '%s' or just '%s'\n", "$cmd" "$cmd"
-                    exit 3
-        fi
-    done
-}
-
-
 macOS_updater(){
     # Mac Operating system update.
     printf "\n\33[32m[+]\33[0m Starting MacOS Update ...\n"
@@ -85,7 +28,7 @@ utils_runner(){
         then 
             # Mac App Store applications update.
             printf "\n[+] Starting Mac Appstore Apps update ...\n"
-           #mas upgrade
+            #mas upgrade
             /usr/local/bin/mas upgrade
         fi 
 
@@ -107,6 +50,48 @@ utils_runner(){
         }
 }
 }
+
+
+main(){
+    local SYSTEM
+    SYSTEM=$(uname -a | cut -d" " -f1) 
+    if [ "$#" -gt "1" ]; then
+        printf "\t\33[31m[✘]\33[0m Too many arguments!!!\n"
+        exit 1
+    elif [ "$#" -eq '0' ]; then 
+        utils_runner; exit 0
+    elif [ "$#" -eq '1' ]; then
+        if [ "$1" == "os" ]; then
+            if [ "$SYSTEM" == "Darwin" ]; then
+                macOS_updater; exit 0
+            elif [ "$SYSTEM" == "Linux" ]; then
+                sudo apt update && sudo apt upgrade; exit 0
+            elif [ "$1" == "tools" ]; then
+                utils_runner; exit 0
+            else
+                cmd=$(which "$0" | awk -F '/' '{print $NF}')
+                printf "\t\33[31m[✘]\33[0m Wrong option! Usage: '%s os/tools' or just '%s'\n\n" "$cmd" "$cmd"
+                exit 2
+            fi
+        fi
+    fi
+
+    # NOTE : below logic not efficient wit OS update.
+    # Kept here for upcoming features.
+    if [ "$#" -eq '2' ]; then
+        if [ "$1" == "os" ] && [ "$2" == "tools" ] \
+            || [ "$1" == "tools" ] || [ "$2" == "os" ]
+                then
+                    macOS_updater && utils_runner; exit 0
+                else
+                    local cmd
+                    #"$cmd"="$(which "$0" | awk -F '/' '{print $NF}')"
+                    printf "\t\33[31m[✘]\33[0m Wrong option, usage: '%s' or just '%s'\n", "$cmd" "$cmd"
+                    exit 3
+        fi
+    fi
+}
+
 
 ### MAIN:
 main "$@"
