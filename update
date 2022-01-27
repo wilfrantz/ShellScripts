@@ -65,7 +65,7 @@ main(){
             if [ "$SYSTEM" == "Darwin" ]; then
                 macOS_updater; exit 0
             elif [ "$SYSTEM" == "Linux" ]; then
-                sudo apt update && sudo apt upgrade; exit 0
+                sudo apt update && sudo apt upgrade -y; exit 0
             elif [ "$1" == "tools" ]; then
                 utils_runner; exit 0
             else
