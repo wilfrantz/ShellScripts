@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# set -x # Debug mode.
+# set -n # Run w/o execution.
+curl "ipinfo.io/108.7.239.68?token=911ac066ab9db3"
+
+ip="$1"
+curl ipinfo.io/"$ip"?token=911ac066ab9db3

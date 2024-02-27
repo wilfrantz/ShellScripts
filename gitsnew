@@ -10,7 +10,6 @@ COLOR_RED="\033[1;31m"
 COLOR_PURPLE="\033[1;35m"
 COLOR_YELLOW="\033[1;33m"
 COLOR_NONE="\033[0m"
-COLOR_GRAY="\033[1;38;5;243m"
 
 repos=""
 if [ -d "$HOME"/Code/Github ]; then
@@ -19,6 +18,9 @@ else
     mkdir -p "$HOME"/Code/Github
     repos="$HOME/Code/Github/"
 fi
+
+#repos=$(find "$HOME" -type d -iname 'Github' | sed 's/\/.git//g')
+
 
 title() {
     echo -e "\n${COLOR_PURPLE}$1${COLOR_NONE}"
@@ -35,7 +37,7 @@ for repo in "$repos"*; do
 
     repo_name=$(basename "$repo")
 
-    if [ "$(git -C "$repo" status 2> /dev/null | grep -i "nothing to commit")" ]; then
+    if git -C "$repo" status 2> /dev/null | grep -q "nothing to commit"; then
         printf "${COLOR_GREEN}Fetching${COLOR_NONE} %s \n" "$repo_name"
         if git -C "$repo" fetch 2> /dev/null; then
             printf "${COLOR_GREEN}Pulling${COLOR_NONE} %s" "$repo_name"
@@ -55,7 +57,7 @@ for repo in "$repos"*; do
 done
 
 
-repo_count=$(ls -l "$repos" | grep -v '^d' | wc -l)
+repo_count=$(ls -l "$repos" | grep -c -v '^d')
 printf "\nSummary: ${COLOR_BLUE}Repos${COLOR_NONE} %d | ${COLOR_BLUE}Updates${COLOR_NONE} %d | ${COLOR_BLUE}Failures${COLOR_NONE} %d | ${COLOR_BLUE}warnings${COLOR_NONE} %d \n" "$repo_count" "$success" "$fail" "$warning"
 
 echo ""
