@@ -22,10 +22,6 @@ speedtestResult=$(speedtest-cli --simple)
 downloadSpeed=$(echo "$speedtestResult" | awk '/Download:/ {print $2}')
 uploadSpeed=$(echo "$speedtestResult" | awk '/Upload:/ {print $2}')
 
-# Prepare message
-message="Internet Speed Test: 
-Download Speed: $downloadSpeed
-Upload Speed: $uploadSpeed"
 
 # Email configuration
 recipient="contact@dede.dev"
@@ -34,6 +30,11 @@ body="Download Speed: $downloadSpeed\nUpload Speed: $uploadSpeed"
 
 # Send email
 echo -e "$body" | mailx -s "$subject" "$recipient"
+
+# Prepare message
+message="Home Internet Speed : 
+Download Speed: $downloadSpeed
+Upload Speed: $uploadSpeed"
 
 # Send message via Telegram
 curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" -d "chat_id=$CHAT_ID&text=$message" > /dev/null
