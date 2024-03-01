@@ -13,7 +13,6 @@ fi
 speedtestResult=$(speedtest-cli --simple 2>&1)
 
 # Read Telegram bot token and chat ID from environment variables
-TOKEN="$TELEGRAM_BOT_TOKEN"
 CHAT_ID="$TELEGRAM_CHAT_ID"
 
 DEVICE=$(hostname -f)
@@ -22,6 +21,9 @@ DEVICE=$(hostname -f)
 message="$DEVICE Internet Speed:
 $speedtestResult"
 
-# Send message via Telegram
-curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" -d "chat_id=$CHAT_ID&text=$message" > /dev/null
+# Send message via Telegram, using the sendTelegramMessage function.
+#source ./sendtelegram.sh
+source ~/Code/Github/dotfiles/bin/sendtelegram.sh
+
+sendTelegramMessage "$CHAT_ID", "$message"
 
