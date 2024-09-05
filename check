@@ -1,7 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Check if a domain argument is provided
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <domain>"
+    exit 1
+fi
 
 domain=$1
 
-whois "$domain"| grep -i "Date:"
+# Use a single whois call to avoid redundancy
+whois_output=$(whois "$domain")
+
+# Extract relevant information using grep
+echo "$whois_output" | grep -i "Date:"
 echo ""
-whois "$domain"| grep -i "Registrar:"
+echo "$whois_output" | grep -i "Registrar:"

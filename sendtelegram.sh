@@ -7,7 +7,7 @@ TELEGRAM_API_URL="https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage"
 
 # Function to send message via Telegram
 sendTelegramMessage() {
-	local chatId="$1"
+	local chatId="TELEGRAM_CHAT_ID"
 	local message="$2"
 
 	# Send message via Telegram
