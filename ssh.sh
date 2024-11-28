@@ -20,13 +20,14 @@ if [ ! -f "$TELEGRAM_SCRIPT" ]; then
     echo "Error: sendtelegram.sh not found at $TELEGRAM_SCRIPT" >&2
     exit 1
 fi
+
+# Source the Telegram script
 source "$TELEGRAM_SCRIPT"
 
 
 # Trap signals for clean exit
 trap 'exit 0' SIGINT SIGTERM
 
-# Monitor SSH logins
 # Monitor SSH logins
 tail -Fn10 "$LOG_FILE" | \
 while read -r line; do
