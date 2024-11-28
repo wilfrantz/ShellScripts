@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 # Clean up caches and temporary files
 echo "Cleaning caches and temporary files..."

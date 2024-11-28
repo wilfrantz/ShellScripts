@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 # Directory to monitor for USB devices
-WATCH_DIR="/dev/disk/by-id/"
+# WATCH_DIR="/dev/disk/by-id/"
 
 # Sound to play when wiping is complete
 SOUND="/usr/share/sounds/ubuntu/stereo/complete.ogg"
@@ -10,7 +12,7 @@ SOUND="/usr/share/sounds/ubuntu/stereo/complete.ogg"
 wipe_disk() {
 	local disk=$1
 	echo "Wiping disk $disk..."
-	shred -v -n 3 $disk
+	shred -v -n 3 "$disk"
 	echo "Wiping completed for $disk"
 	paplay $SOUND
 }
@@ -20,8 +22,8 @@ handle_device() {
 	local device=$1
 
 	# Ensure it's a USB disk
-	if [[ -b $device && $(lsblk -no FSTYPE $device) == "" ]]; then
-		wipe_disk $device
+	if [[ -b $device && $(lsblk -no FSTYPE "$device") == "" ]]; then
+		wipe_disk "$device"
 	fi
 }
 
@@ -32,7 +34,7 @@ while true; do
 		# Extract device path from the udev event
 		device=$(echo "$line" | grep -oP '(?<=DEVNAME=)[^\s]*')
 		if [[ -n $device && -e $device ]]; then
-			handle_device $device
+			handle_device "$device"
 		fi
 	fi
 done
