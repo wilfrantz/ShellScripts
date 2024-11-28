@@ -6,14 +6,31 @@ set -o errexit
 
 # Read chat ID from env. 
 CHAT_ID="$TELEGRAM_CHAT_ID"
-echo "CHAT_ID: $CHAT_ID"
+LOG_FILE="${LOG_FILE:-/var/log/auth.log}"
+TELEGRAM_SCRIPT="${HOME}/Code/Github/dotfiles/bin/sendtelegram.sh"
+
+# Ensure CHAT_ID is set
+if [ -z "$CHAT_ID" ]; then
+    echo "Error: TELEGRAM_CHAT_ID is not set." >&2
+    exit 1
+fi
+
+# Ensure the Telegram script exists
+if [ ! -f "$TELEGRAM_SCRIPT" ]; then
+    echo "Error: sendtelegram.sh not found at $TELEGRAM_SCRIPT" >&2
+    exit 1
+fi
+source "$TELEGRAM_SCRIPT"
+
+
+# Trap signals for clean exit
+trap 'exit 0' SIGINT SIGTERM
 
 # Monitor SSH logins
-tail -Fn0 /var/log/auth.log | \
+# Monitor SSH logins
+tail -Fn10 "$LOG_FILE" | \
 while read -r line; do
-    if [ "$(echo "$line" | grep "sshd.*Accepted" >/dev/null)" = 0 ]; then 
-        # Send message via Telegram, using the sendTelegramMessage function.
-        source "${HOME}/Code/Github/dotfiles/bin/sendtelegram.sh"
+    if echo "$line" | grep -q "sshd.*Accepted"; then
         sendTelegramMessage "$CHAT_ID" "✅ SSH Login: $line"
     fi
 done
