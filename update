@@ -1,89 +1,74 @@
 #!/usr/bin/env bash
 
-# Change log
-# 2024-12-12: initial commit
-# Changes and Enhancements:
-#   - Universal Paths:
-#     - Updated brew to use /opt/homebrew/bin/brew, which is the default on Apple Silicon.
-#   - Deprecation Fixes:
-#     - Removed deprecated brew cask commands, using modern equivalents.
-#   - Signal Handling:
-#     - Refined trap for better handling of interruptions.
-#   - Validation:
-#     - Added checks for commands like mas and brew to prevent failures if they’re not installed.
-#   - Simplified Logic:
-#     - Consolidated redundant logic for os and tools.
-#   - User Experience:
-#     - Improved output formatting with clear messages and color coding.
+# Simple bash script to update macOS and utilities.
+# Usage: "update os" or "update tools" or "update os tools" or "update"
+# Updated: November 2020 (Reviewed: February 2025)
 
-set -euo pipefail
-
-# Update Script for macOS and Utilities (Optimized for Apple Silicon M3 and up)
-# Usage: 
-#   - Run `update os` for macOS updates
-#   - Run `update tools` for utility updates
-#   - Run `update` for both
-# Updated: December 2024
-
-# macOS update function
 macOS_updater() {
-    echo -e "\n\033[32m[+]\033[0m Starting macOS Update..."
-    sudo softwareupdate --all --install --force --verbose --restart
-    echo -e "\n\033[32m[✔]\033[0m macOS update completed!\n"
+    printf "\n\e[32m[+]\e[0m Starting macOS Update...\n"
+    printf "Warning: This will restart your system. Continue? (y/N) "
+    read -r response
+    [[ "$response" =~ ^[Yy]$ ]] || { printf "\t\e[31m[✘]\e[0m Update aborted\n"; exit 1; }
+    sudo softwareupdate --all --install --force --verbose --restart || {
+        printf "\t\e[31m[✘]\e[0m macOS update failed\n"; exit 1;
+    }
+    printf "\n\n"
 }
 
-# Utilities update function
 utils_runner() {
-    trap 'echo -e "\n\033[31m[✘]\033[0m Update interrupted!"' SIGINT SIGTERM
-
-    echo -e "\n\033[32m[+]\033[0m Starting utilities update..."
-
-    # Update Mac App Store apps (requires mas-cli)
-    if command -v mas &>/dev/null; then
-        echo -e "\n[+] Updating Mac App Store apps..."
-        mas upgrade || echo "mas upgrade failed. Please ensure mas-cli is installed."
-    else
-        echo "mas-cli not found. Skipping Mac App Store updates."
+    trap 'printf "\t\e[31m[✘]\e[0m Caught Signal\n"; exit 1' SIGINT SIGTERM SIGTSTP
+    if [ "$SYSTEM" == "Darwin" ]; then
+        command -v mas >/dev/null || { printf "\t\e[31m[✘]\e[0m mas not installed\n"; exit 1; }
+        command -v brew >/dev/null || { printf "\t\e[31m[✘]\e[0m brew not installed\n"; exit 1; }
+        printf "\n\e[32m[+]\e[0m Starting Mac App Store Apps update...\n"
+        /usr/local/bin/mas upgrade || { printf "\t\e[31m[✘]\e[0m mas upgrade failed\n"; exit 1; }
+        printf "\n\e[32m[+]\e[0m Starting Brew Update...\n"
+        /usr/local/bin/brew update || { printf "\t\e[31m[✘]\e[0m brew update failed\n"; exit 1; }
+        /usr/local/bin/brew upgrade --cask || { printf "\t\e[31m[✘]\e[0m brew cask upgrade failed\n"; exit 1; }
+        /usr/local/bin/brew upgrade || { printf "\t\e[31m[✘]\e[0m brew upgrade failed\n"; exit 1; }
+    elif [ "$SYSTEM" == "Linux" ]; then
+        command -v brew >/dev/null || { printf "\t\e[31m[✘]\e[0m brew not installed\n"; exit 1; }
+        printf "\n\e[32m[+]\e[0m Starting Brew packages update...\n"
+        "$HOME/.linuxbrew/bin/brew" update || { printf "\t\e[31m[✘]\e[0m brew update failed\n"; exit 1; }
+        "$HOME/.linuxbrew/bin/brew" upgrade || { printf "\t\e[31m[✘]\e[0m brew upgrade failed\n"; exit 1; }
     fi
-
-    # Update Brew packages
-    if command -v brew &>/dev/null; then
-        echo -e "\n[+] Updating Homebrew packages and casks..."
-        brew update && brew upgrade && brew upgrade --cask || {
-            echo "Homebrew update failed. Check Homebrew installation.";
-            return 1;
-        }
-    else
-        echo "Homebrew not found. Skipping Brew updates."
-    fi
-
-    echo -e "\n\033[32m[✔]\033[0m Utilities update completed!\n"
+    printf "\n\e[32m[✔]\e[0m Utils update completed successfully!\n"
+    return 0
 }
 
-# Main script logic
 main() {
-    if [[ $# -gt 1 ]]; then
-        echo -e "\033[31m[✘]\033[0m Too many arguments! Usage: update [os/tools]"
+    local SYSTEM cmd
+    SYSTEM=$(uname -s)
+    cmd=$(basename "$0")
+    if [ "$#" -gt 2 ]; then
+        printf "\t\e[31m[✘]\e[0m Too many arguments!\n"
         exit 1
-    fi
-
-    case "${1:-all}" in
-        os)
-            [[ "$(uname -s)" == "Darwin" ]] && macOS_updater || echo "Not a macOS system. Skipping macOS update."
-            ;;
-        tools)
-            utils_runner
-            ;;
-        all)
-            [[ "$(uname -s)" == "Darwin" ]] && macOS_updater
-            utils_runner
-            ;;
-        *)
-            echo -e "\033[31m[✘]\033[0m Invalid option! Usage: update [os/tools]"
+    elif [ "$#" -eq 0 ]; then
+        utils_runner; exit 0
+    elif [ "$#" -eq 1 ]; then
+        if [ "$1" == "os" ]; then
+            if [ "$SYSTEM" == "Darwin" ]; then
+                macOS_updater; exit 0
+            elif [ "$SYSTEM" == "Linux" ]; then
+                ( sudo apt update && sudo apt upgrade -y ) || { printf "\t\e[31m[✘]\e[0m apt update failed\n"; exit 1; }
+                exit 0
+            fi
+        elif [ "$1" == "tools" ]; then
+            utils_runner; exit 0
+        else
+            printf "\t\e[31m[✘]\e[0m Wrong option! Usage: '%s os' or '%s tools' or '%s os tools' or '%s'\n" "$cmd" "$cmd" "$cmd" "$cmd"
             exit 2
-            ;;
-    esac
+        fi
+    elif [ "$#" -eq 2 ]; then
+        if [ "$1" == "os" ] && [ "$2" == "tools" ]; then
+            macOS_updater && utils_runner; exit 0
+        else
+            printf "\t\e[31m[✘]\e[0m Wrong option! Usage: '%s os' or '%s tools' or '%s os tools' or '%s'\n" "$cmd" "$cmd" "$cmd" "$cmd"
+            exit 3
+        fi
+    fi
 }
 
-# Run the script
+### MAIN:
+[[ -n $BASH_VERSION ]] || { echo "This script requires Bash"; exit 1; }
 main "$@"
