@@ -29,7 +29,7 @@ source "$TELEGRAM_SCRIPT"
 trap 'exit 0' SIGINT SIGTERM
 
 # Monitor SSH logins
-tail -Fn10 "$LOG_FILE" | \
+tail -Fn0 "$LOG_FILE" | \
 while read -r line; do
     if echo "$line" | grep -q "sshd.*Accepted"; then
         sendTelegramMessage "$CHAT_ID" "✅ SSH Login: $line"
