@@ -115,7 +115,9 @@ systemctl set-default multi-user.target || {
 
 # Enable vim keybindings in bash
 logAction "Enabling vim keybindings in bash..." "yellow"
-echo "set -o vi" >> /etc/bash.bashrc
+if ! grep -q "set -o vi" /etc/bash.bashrc; then
+    echo "set -o vi" >> /etc/bash.bashrc
+fi
 
 # Verify disk space and packages
 logAction "Post-cleanup stats:" "blue"
