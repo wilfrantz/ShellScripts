@@ -1,6 +1,0 @@
-[34m
-* Datadog Agent 7 install script v1.34.0
-[0m
-[31mThis script does not support installing on the Mac.
-
-Please use the 1-step script available at https://app.datadoghq.com/account/settings/agent/latest?platform=macos.[0m
