@@ -1,7 +1,9 @@
  #! /usr/bin/env bash
 
- # Configuration File (backupConfig.sh)
- source backupConfig.sh
+# Configuration Variables
+export rcloneRemote="gdrive_backup:"
+export rcloneCryptRemote="gdrive_encrypted:"
+export dataToBackup="/etc /home /var /opt /srv /root "
 
  # Log file location
  logFile="/var/log/backup.log"
@@ -48,34 +50,24 @@
  fi
  log "INFO: Compression complete."
 
+
  # Encrypt the file
- log "INFO: Starting encryption."
- rclone cryptcheck "$backupFile" "$rcloneCryptRemote" # Check if rclone crypt is set up correctly
- if [[ $? -ne 0 ]]; then
-     log "ERROR: Encryption check failed. Ensure rclone crypt is configured."
-     rm -rf "$tmpDir"
-     exit 1
- fi
+log "INFO: Starting encryption."
+rclone cryptcheck "$backupFile" "$rcloneCryptRemote" # Check if rclone crypt is set up correctly
+if [[ $? -ne 0 ]]; then
+    log "ERROR: Encryption check failed. Ensure rclone crypt is configured."
+    rm -rf "$tmpDir"
+    exit 1
+fi
 
- rclone copy "$backupFile" "$rcloneCryptRemote" --progress
- if [[ $? -ne 0 ]]; then
-     log "ERROR: Encryption failed."
-     rm -rf "$tmpDir"
-     exit 1
- fi
+rclone copy "$backupFile" "$rcloneCryptRemote" --progress
+if [[ $? -ne 0 ]]; then
+    log "ERROR: Encryption failed."
+    rm -rf "$tmpDir"
+    exit 1
+fi
 
- log "INFO: Encryption complete."
-
-
- # Upload to Google Drive
- log "INFO: Starting upload to Google Drive."
- rclone copy "$backupFile" "$rcloneCryptRemote" --progress
- if [[ $? -ne 0 ]]; then
-     log "ERROR: Upload to Google Drive failed."
-     rm -rf "$tmpDir"
-     exit 1
- fi
- log "INFO: Upload to Google Drive complete."
+log "INFO: Encryption complete."
 
  # Cleanup
  rm -rf "$tmpDir"
